@@ -1,0 +1,64 @@
+module Control (
+    input [4:0] Opcode,             // Specifies the operation type
+    input I,                        // Immediate flag
+    output reg IsSt,                // Store operation flag
+    output reg IsLd,                // Load operation flag
+    output reg IsBeq,               // Branch if equal flag
+    output reg IsBgt,               // Branch if greater flag
+    output reg IsRet,               // Return operation flag
+    output reg IsImmediate,         // Immediate operation flag
+    output reg IsWb,                // Write-back flag
+    output reg IsUBranch,           // Unconditional branch flag
+    output reg IsCall,              // Function call flag
+    output reg [4:0] AluSignal      // ALU operation signal
+);
+
+always @(*) begin
+    // Reset all outputs to default values
+    IsSt = 0;
+    IsLd = 0;
+    IsBeq = 0;
+    IsBgt = 0;
+    IsRet = 0;
+    IsImmediate = 0;
+    IsWb = 0;
+    IsUBranch = 0;
+    IsCall = 0;
+    AluSignal = 5'b00000;
+
+    // Immediate flag handling
+    if (I == 1) begin
+        IsImmediate = 1;
+    end
+
+    // Opcode decoding
+    case (Opcode)
+        5'b00000: begin
+            AluSignal = Opcode;
+            IsWb = 1; // Write-back enabled for arithmetic operations
+        end
+        5'b10000: begin
+            AluSignal = 5'b01101;
+            IsBeq = 1; // Branch if equal
+        end
+        5'b10010: begin
+            AluSignal = 5'b01101;
+            IsUBranch = 1; // Unconditional branch
+        end
+        5'b10011: begin
+            AluSignal = 5'b01101;
+            IsUBranch = 1;
+            IsCall = 1; // Function call
+        end
+        5'b10100: begin
+            AluSignal = 5'b01101;
+            IsUBranch = 1;
+            IsRet = 1; // Return operation
+        end
+        default: begin
+            // Outputs remain at default values
+        end
+    endcase
+end
+
+endmodule
