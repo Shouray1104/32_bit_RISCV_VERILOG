@@ -1,0 +1,220 @@
+`timescale 1ns / 1ps
+
+module Alu_tb;
+
+    // Test bench variables
+    reg [4:0] AluSignal;
+    reg [31:0] A, B;
+    wire [31:0] AluResult;
+    wire [1:0] Flags;
+
+    // Instantiate the ALU module
+    Alu uut (
+        .AluSignal(AluSignal),
+        .A(A),
+        .B(B),
+        .AluResult(AluResult),
+        .Flags(Flags)
+    );
+
+    // Test sequence
+    initial begin
+        // Test 1: Addition (A + B)
+        A = 32'd10; B = 32'd5; AluSignal = 5'b00000;
+        #10; // Wait for 10 time units
+
+        // Test 2: Subtraction (A - B)
+        A = 32'd15; B = 32'd7; AluSignal = 5'b00001;
+        #10;
+
+        // Test 3: Multiplication (A * B)
+        A = 32'd3; B = 32'd4; AluSignal = 5'b00010;
+        #10;
+
+        // Test 4: Division (A / B)
+        A = 32'd20; B = 32'd4; AluSignal = 5'b00011;
+        #10;
+
+        // Test 5: Modulus (A % B)
+        A = 32'd20; B = 32'd6; AluSignal = 5'b00100;
+        #10;
+
+        // Test 6: Comparison (A == B)
+        A = 32'd8; B = 32'd8; AluSignal = 5'b00101;
+        #10;
+
+        // Test 7: Logical AND (A & B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00110;
+        #10;
+
+        // Test 8: Logical OR (A | B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00111;
+        #10;
+
+        // Test 9: Logical NOT (~A)
+        A = 32'b00001111; AluSignal = 5'b01000;
+        #10;
+
+        // Test 10: Logical Shift Left (A << B)
+        A = 32'd5; B = 32'd2; AluSignal = 5'b01010;
+        #10;
+
+        // Test 11: Logical Shift Right (A >> B)
+        A = 32'd20; B = 32'd2; AluSignal = 5'b01011;
+        #10;
+
+        // Test 12: Arithmetic Shift Right (A_signed >>> B)
+        A = -32'd20; B = 32'd2; AluSignal = 5'b01100;
+        #10;
+
+        // End Simulation
+        $finish;
+    end
+
+endmodule`timescale 1ns / 1ps
+
+module Alu_tb;
+
+    // Test bench variables
+    reg [4:0] AluSignal;
+    reg [31:0] A, B;
+    wire [31:0] AluResult;
+    wire [1:0] Flags;
+
+    // Instantiate the ALU module
+    Alu uut (
+        .AluSignal(AluSignal),
+        .A(A),
+        .B(B),
+        .AluResult(AluResult),
+        .Flags(Flags)
+    );
+
+    // Test sequence
+    initial begin
+        // Test 1: Addition (A + B)
+        A = 32'd10; B = 32'd5; AluSignal = 5'b00000;
+        #10; // Wait for 10 time units
+
+        // Test 2: Subtraction (A - B)
+        A = 32'd15; B = 32'd7; AluSignal = 5'b00001;
+        #10;
+
+        // Test 3: Multiplication (A * B)
+        A = 32'd3; B = 32'd4; AluSignal = 5'b00010;
+        #10;
+
+        // Test 4: Division (A / B)
+        A = 32'd20; B = 32'd4; AluSignal = 5'b00011;
+        #10;
+
+        // Test 5: Modulus (A % B)
+        A = 32'd20; B = 32'd6; AluSignal = 5'b00100;
+        #10;
+
+        // Test 6: Comparison (A == B)
+        A = 32'd8; B = 32'd8; AluSignal = 5'b00101;
+        #10;
+
+        // Test 7: Logical AND (A & B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00110;
+        #10;
+
+        // Test 8: Logical OR (A | B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00111;
+        #10;
+
+        // Test 9: Logical NOT (~A)
+        A = 32'b00001111; AluSignal = 5'b01000;
+        #10;
+
+        // Test 10: Logical Shift Left (A << B)
+        A = 32'd5; B = 32'd2; AluSignal = 5'b01010;
+        #10;
+
+        // Test 11: Logical Shift Right (A >> B)
+        A = 32'd20; B = 32'd2; AluSignal = 5'b01011;
+        #10;
+
+        // Test 12: Arithmetic Shift Right (A_signed >>> B)
+        A = -32'd20; B = 32'd2; AluSignal = 5'b01100;
+        #10;
+
+        // End Simulation
+        $finish;
+    end
+
+endmodule`timescale 1ns / 1ps
+
+module Alu_tb;
+
+    // Test bench variables
+    reg [4:0] AluSignal;
+    reg [31:0] A, B;
+    wire [31:0] AluResult;
+    wire [1:0] Flags;
+
+    // Instantiate the ALU module
+    Alu uut (
+        .AluSignal(AluSignal),
+        .A(A),
+        .B(B),
+        .AluResult(AluResult),
+        .Flags(Flags)
+    );
+
+    // Test sequence
+    initial begin
+        // Test 1: Addition (A + B)
+        A = 32'd10; B = 32'd5; AluSignal = 5'b00000;
+        #10; // Wait for 10 time units
+
+        // Test 2: Subtraction (A - B)
+        A = 32'd15; B = 32'd7; AluSignal = 5'b00001;
+        #10;
+
+        // Test 3: Multiplication (A * B)
+        A = 32'd3; B = 32'd4; AluSignal = 5'b00010;
+        #10;
+
+        // Test 4: Division (A / B)
+        A = 32'd20; B = 32'd4; AluSignal = 5'b00011;
+        #10;
+
+        // Test 5: Modulus (A % B)
+        A = 32'd20; B = 32'd6; AluSignal = 5'b00100;
+        #10;
+
+        // Test 6: Comparison (A == B)
+        A = 32'd8; B = 32'd8; AluSignal = 5'b00101;
+        #10;
+
+        // Test 7: Logical AND (A & B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00110;
+        #10;
+
+        // Test 8: Logical OR (A | B)
+        A = 32'b10101010; B = 32'b11001100; AluSignal = 5'b00111;
+        #10;
+
+        // Test 9: Logical NOT (~A)
+        A = 32'b00001111; AluSignal = 5'b01000;
+        #10;
+
+        // Test 10: Logical Shift Left (A << B)
+        A = 32'd5; B = 32'd2; AluSignal = 5'b01010;
+        #10;
+
+        // Test 11: Logical Shift Right (A >> B)
+        A = 32'd20; B = 32'd2; AluSignal = 5'b01011;
+        #10;
+
+        // Test 12: Arithmetic Shift Right (A_signed >>> B)
+        A = -32'd20; B = 32'd2; AluSignal = 5'b01100;
+        #10;
+
+        // End Simulation
+        $finish;
+    end
+
+endmodule
