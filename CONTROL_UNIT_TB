@@ -1,0 +1,63 @@
+module Control_tb;
+
+    // Test Bench Variables
+    reg [4:0] Opcode;             // Simulated Opcode input
+    reg I;                        // Simulated Immediate flag
+    wire IsSt, IsLd, IsBeq, IsBgt, IsRet, IsImmediate, IsWb, IsUBranch, IsCall;
+    wire [4:0] AluSignal;         // Outputs to observe
+
+    // Instantiate the Control Module
+    Control uut (
+        .Opcode(Opcode),
+        .I(I),
+        .IsSt(IsSt),
+        .IsLd(IsLd),
+        .IsBeq(IsBeq),
+        .IsBgt(IsBgt),
+        .IsRet(IsRet),
+        .IsImmediate(IsImmediate),
+        .IsWb(IsWb),
+        .IsUBranch(IsUBranch),
+        .IsCall(IsCall),
+        .AluSignal(AluSignal)
+    );
+
+    // Test Sequence
+    initial begin
+        $display("Test Begin:");
+
+        // Test Case 1: Arithmetic Operation
+        Opcode = 5'b00000; I = 0; // Arithmetic Opcode, no immediate value
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsWb = %b", $time, Opcode, I, AluSignal, IsWb);
+
+        // Test Case 2: Immediate Arithmetic Operation
+        Opcode = 5'b00000; I = 1; // Arithmetic Opcode, immediate value
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsImmediate = %b", $time, Opcode, I, AluSignal, IsImmediate);
+
+        // Test Case 3: Branch Equal (Beq)
+        Opcode = 5'b10000; I = 0; // Branch Equal Opcode
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsBeq = %b", $time, Opcode, I, AluSignal, IsBeq);
+
+        // Test Case 4: Unconditional Branch
+        Opcode = 5'b10010; I = 0; // Unconditional Branch Opcode
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsUBranch = %b", $time, Opcode, I, AluSignal, IsUBranch);
+
+        // Test Case 5: Function Call
+        Opcode = 5'b10011; I = 1; // Function Call Opcode
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsCall = %b, IsUBranch = %b", $time, Opcode, I, AluSignal, IsCall, IsUBranch);
+
+        // Test Case 6: Return Operation
+        Opcode = 5'b10100; I = 0; // Return Opcode
+        #10;
+        $display("Time = %0d, Opcode = %b, I = %b, AluSignal = %b, IsRet = %b", $time, Opcode, I, AluSignal, IsRet);
+
+        // End of Test
+        $finish;
+    end
+
+endmodule
