@@ -1,0 +1,89 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 14.04.2025 06:26:58
+// Design Name: 
+// Module Name: EX_tb
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+module EX_tb;
+
+    // Test Bench Variables (Inputs to the EX module)
+    reg IsRet, IsBeq, IsBgt, IsUBranch, IsImmediate;
+    reg [31:0] BranchTarget, Op1, Op2, Immx;
+    reg [4:0] AluSignal;
+    reg [1:0] Flags;
+
+    // Outputs from the EX module
+    wire [31:0] AluResult, BranchPC;
+    wire IsBranchTaken;
+
+    // Instantiate the EX module
+    EX uut (
+        .IsRet(IsRet),
+        .IsBeq(IsBeq),
+        .IsBgt(IsBgt),
+        .IsUBranch(IsUBranch),
+        .IsImmediate(IsImmediate),
+        .BranchTarget(BranchTarget),
+        .AluSignal(AluSignal),
+        .Op1(Op1),
+        .Op2(Op2),
+        .Immx(Immx),
+        .Flags(Flags),
+        .AluResult(AluResult),
+        .BranchPC(BranchPC),
+        .IsBranchTaken(IsBranchTaken)
+    );
+
+    // Test Sequence
+    initial begin
+        $display("Starting Test Bench for EX module:");
+
+        // Test Case 1: Unconditional Branch
+        IsRet = 0; IsBeq = 0; IsBgt = 0; IsUBranch = 1; IsImmediate = 0;
+        BranchTarget = 32'h1000; Op1 = 32'h0000; Op2 = 32'h0000; Immx = 32'h0000; Flags = 2'b00; AluSignal = 5'b00000;
+        #10; // Wait for 10 time units
+        $display("Test 1: IsUBranch = %b, BranchPC = %h, IsBranchTaken = %b", IsUBranch, BranchPC, IsBranchTaken);
+
+        // Test Case 2: Branch if Equal (Condition True)
+        IsRet = 0; IsBeq = 1; IsBgt = 0; IsUBranch = 0; IsImmediate = 0;
+        BranchTarget = 32'h2000; Op1 = 32'h0000; Op2 = 32'h0000; Immx = 32'h0000; Flags = 2'b01; AluSignal = 5'b00000;
+        #10; // Simulate Flags[0] = 1 (Equality)
+        $display("Test 2: IsBeq = %b, BranchPC = %h, IsBranchTaken = %b", IsBeq, BranchPC, IsBranchTaken);
+
+        // Test Case 3: Branch if Greater (Condition False)
+        IsRet = 0; IsBeq = 0; IsBgt = 1; IsUBranch = 0; IsImmediate = 0;
+        BranchTarget = 32'h3000; Op1 = 32'h0000; Op2 = 32'h0000; Immx = 32'h0000; Flags = 2'b00; AluSignal = 5'b00000;
+        #10; // Simulate Flags[1] = 0 (Greater-than condition not satisfied)
+        $display("Test 3: IsBgt = %b, BranchPC = %h, IsBranchTaken = %b", IsBgt, BranchPC, IsBranchTaken);
+
+        // Test Case 4: Return Instruction
+        IsRet = 1; IsBeq = 0; IsBgt = 0; IsUBranch = 0; IsImmediate = 0;
+        BranchTarget = 32'h4000; Op1 = 32'h5000; Op2 = 32'h0000; Immx = 32'h0000; Flags = 2'b00; AluSignal = 5'b00000;
+        #10; // Return BranchPC should be Op1
+        $display("Test 4: IsRet = %b, BranchPC = %h, IsBranchTaken = %b", IsRet, BranchPC, IsBranchTaken);
+
+        // Test Case 5: ALU Operation with Immediate Value
+        IsRet = 0; IsBeq = 0; IsBgt = 0; IsUBranch = 0; IsImmediate = 1;
+        BranchTarget = 32'h0000; Op1 = 32'h0002; Op2 = 32'h0000; Immx = 32'h0003; Flags = 2'b00; AluSignal = 5'b00000;
+        #10; // ALU performs addition with Op1 and Immx
+        $display("Test 5: IsImmediate = %b, AluResult = %h", IsImmediate, AluResult);
+
+        // End simulation
+ $finish;
+    end
+
+endmodule
