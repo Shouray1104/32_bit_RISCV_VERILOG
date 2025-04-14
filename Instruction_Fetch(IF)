@@ -1,0 +1,40 @@
+module IF(
+    input [31:0] PC,            // The current instruction address (Program Counter)
+    input Clk,                  // The clock signal (controls when instructions update)
+    input IsBranchTaken,         // A signal that tells us if we need to jump to another instruction
+    input [31:0] BranchPC,       // The address to jump to if a branch is taken
+    output reg [31:0] pc_current,// The actual Program Counter (where we are in the program)
+    output reg [31:0] Instruction // The instruction fetched from memory
+);
+
+reg [31:0] pc_temp;  // Temporary variable for storing the next instruction address
+integer ind;         // A counter used to fetch the full instruction (4 bytes)
+
+// Simulated instruction memory (acting like a storage for instructions)
+reg [7:0] Mem [0:255]; // Memory space of 256 locations, each 8-bit wide
+
+// **Instruction Fetch Process** (Runs every time the clock signal goes low)
+always @(negedge Clk) begin
+    // **Step 1: Set up the initial program counter**
+    if (ind == 0) begin
+        pc_temp = PC;       // Start fetching from the given PC
+        pc_current = PC;    // Set the current position in the program
+    end
+
+    // **Step 2: Fetch the instruction from memory**
+    // Instructions are 32-bit (4 bytes), but memory stores 8-bit data,
+    // so we need to read **4 memory locations** to get the complete instruction.
+    for (ind = 0; ind < 4; ind = ind + 1) begin
+        Instruction[8*ind +: 8] = Mem[pc_temp]; // Read 8 bits from memory at the current address
+        pc_temp = pc_temp + 1; // Move to the next memory location
+    end
+
+    // **Step 3: Decide where the next instruction should come from**
+    if (IsBranchTaken) begin
+        pc_current = BranchPC; // If a branch is taken, jump to the new address (BranchPC)
+    end else begin
+        pc_current = pc_temp - 4; // Otherwise, move to the next instruction in sequence
+    end
+end
+
+endmodule
