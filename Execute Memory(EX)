@@ -1,0 +1,93 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: Minor Project 2025
+// Engineer: Shouray Soni
+// 
+// Create Date: 14.04.2025 06:20:21
+// Design Name: Ex
+// Module Name: EXecute 
+// Project Name: RISCV
+// Target Devices: FPGA
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+module EX(
+    input IsRet,                 // Flag for return instruction
+    input IsBeq,                 // Flag for branch if equal
+    input IsBgt,                 // Flag for branch if greater
+    input IsUBranch,             // Flag for unconditional branch
+    input IsImmediate,           // Flag for immediate operand use
+    input [31:0] BranchTarget,   // Target program counter for branching
+    input [4:0] AluSignal,       // ALU operation signal
+    input [31:0] Op1,            // First operand
+    input [31:0] Op2,            // Second operand
+    input [31:0] Immx,           // Immediate value
+    input [1:0] Flags,           // Flags: [0] for equality, [1] for greater-than
+    output reg [31:0] AluResult, // Result of ALU operation
+    output reg [31:0] BranchPC,  // Computed program counter for branch
+    output reg IsBranchTaken     // Flag indicating if a branch is taken
+);
+
+reg [31:0] AluOp1, AluOp2; // Registers to hold operands for ALU
+reg w1, w2;                // Temporary flags for conditional branches
+
+// --------------------------------------------
+
+always @(*) begin
+    // Step 1: Initialize outputs
+    IsBranchTaken = 0;        // Default no branch taken
+    BranchPC = BranchTarget;  // Default branch target is provided BranchTarget
+
+    // Step 2: Handle return instruction
+    if (IsRet) begin
+        BranchPC = Op1; // Set BranchPC to Op1 for return instruction
+    end
+
+    // Step 3: Evaluate branch conditions using Flags
+    if (IsBeq && Flags[0]) begin
+        w1 = 1; // Equality condition satisfied
+    end else begin
+        w1 = 0;
+    end
+
+    if (IsBgt && Flags[1]) begin
+        w2 = 1; // Greater-than condition satisfied
+    end else begin
+        w2 = 0;
+    end
+
+    // Determine if the branch is taken
+    if (IsUBranch || w1 || w2) begin
+        IsBranchTaken = 1; // Branch is taken if any condition is true
+    end else begin
+        IsBranchTaken = 0; // No branch is taken
+    end
+
+    // ---------------------------------------------
+    // Step 4: Configure ALU operands
+    AluOp1 = Op1; // First operand is always Op1
+    if (IsImmediate) begin
+        AluOp2 = Immx; // Use immediate value for the second operand
+    end else begin
+        AluOp2 = Op2; // Use second operand from input
+    end
+
+    // Step 5: Perform ALU operation based on AluSignal
+    case (AluSignal)
+        5'b00000: AluResult = AluOp1 + AluOp2; // Addition
+        5'b00001: AluResult = AluOp1 - AluOp2; // Subtraction
+        5'b00010: AluResult = AluOp1 & AluOp2; // Bitwise AND
+        5'b00011: AluResult = AluOp1 | AluOp2; // Bitwise OR
+        5'b00100: AluResult = ~AluOp1;         // Bitwise NOT
+        default: AluResult = 32'd0;           // Default case: zero result
+    endcase
+end
+
+endmodule
