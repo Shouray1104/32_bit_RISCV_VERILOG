@@ -1,0 +1,60 @@
+module IF_tb;
+
+    // Inputs to the IF module (these are like switches and data you control)
+    reg [31:0] PC;               // The starting point: where the program begins executing
+    reg Clk;                     // The clock signal: tells the module when to work
+    reg IsBranchTaken;           // A flag: tells the module to jump to a different part of the program
+    reg [31:0] BranchPC;         // The address to jump to (new location if we take a branch)
+
+    // Outputs from the IF module (the results of the module's work)
+    wire [31:0] pc_current;      // The current instruction location (Program Counter)
+    wire [31:0] Instruction;     // The instruction fetched from memory
+
+    // Connect the IF module (we call this "instantiating" the module)
+    IF uut (
+        .PC(PC),                  // Connect the program counter to the module
+        .Clk(Clk),                // Connect the clock signal to the module
+        .IsBranchTaken(IsBranchTaken), // Connect the branch flag to the module
+        .BranchPC(BranchPC),      // Connect the branch address to the module
+        .pc_current(pc_current),  // Connect the current program counter output
+        .Instruction(Instruction) // Connect the fetched instruction output
+    );
+
+    // Memory to store dummy instructions (like a fake library of steps for the processor)
+    reg [7:0] Mem[0:255]; // Memory has 256 locations, each 8 bits (1 byte) wide
+
+    // Clock signal toggling (simulates how real processors work)
+    always #5 Clk = ~Clk; // Toggle the clock every 5 units of time
+
+    initial begin
+        // **Step 1: Load dummy instructions into memory**
+        // These represent instructions the processor can fetch and use
+        Mem[0] = 8'hA1; Mem[1] = 8'hB2; Mem[2] = 8'hC3; Mem[3] = 8'hD4; // Instruction 1
+        Mem[4] = 8'hE5; Mem[5] = 8'hF6; Mem[6] = 8'h07; Mem[7] = 8'h18; // Instruction 2
+
+        $display("Starting Test Bench for IF module:");
+
+        // **Test Case 1: Normal execution without jumping**
+        PC = 32'h0000;            // Start from address 0x0000
+        Clk = 0;                  // Set clock to low initially
+        IsBranchTaken = 0;        // No jump (branch) is happening
+        BranchPC = 32'h0000;      // BranchPC is unused here
+        #10;                      // Wait for 10 units of time
+        $display("Test 1: PC = %h, Instruction = %h, pc_current = %h", PC, Instruction, pc_current);
+
+        // **Test Case 2: Jump to a new instruction (branch taken)**
+        IsBranchTaken = 1;        // Turn on branch flag
+        BranchPC = 32'h0004;      // Jump to address 0x0004
+        #10;                      // Wait for 10 units of time
+        $display("Test 2: Branch Taken! BranchPC = %h, pc_current = %h", BranchPC, pc_current);
+
+        // **Test Case 3: Continue normal execution after the branch**
+        IsBranchTaken = 0;        // Turn off branch flag
+        #10;                      // Wait for 10 units of time
+        $display("Test 3: PC = %h, Instruction = %h, pc_current = %h", PC, Instruction, pc_current);
+
+        // End simulation
+        $finish; // Stops the simulation
+    end
+
+endmodule
