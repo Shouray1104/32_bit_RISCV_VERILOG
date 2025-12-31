@@ -1,4 +1,4 @@
-module Alu(
+module Alu( 
     input [4:0] AluSignal,
     input [31:0] A,
     input [31:0] B,
