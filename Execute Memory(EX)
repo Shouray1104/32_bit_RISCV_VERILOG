@@ -43,7 +43,7 @@ reg w1, w2;                // Temporary flags for conditional branches
 always @(*) begin
     // Step 1: Initialize outputs
     IsBranchTaken = 0;        // Default no branch taken
-    BranchPC = BranchTarget;  // Default branch target is provided BranchTarget
+    BranchPC = BranchTarget;  // Default branch target is provided BranchTarget 
 
     // Step 2: Handle return instruction
     if (IsRet) begin
